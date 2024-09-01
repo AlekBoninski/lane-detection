@@ -1,5 +1,5 @@
 .idea
 venv
 checkpoints*
-test*
+/test*
 **/__pycache__/**
