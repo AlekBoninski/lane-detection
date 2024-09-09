@@ -29,9 +29,10 @@ class AccuracyEval:
 class PixelDistanceEval:
     def __init__(self):
         self.distances = []
+        self.inverted_distances = []
 
     def __call__(self):
-        return sum(self.distances) / (len(self.distances) + 1e-6)
+        return sum(self.distances) / (len(self.distances) + 1e-6), sum(self.inverted_distances) / (len(self.inverted_distances) + 1e-6)
 
     def add_batch(self, predictions, targets):
         predictions_discrete = (predictions[:, 1, :, :] > predictions[:, 0, :, :]).bool()
@@ -50,11 +51,18 @@ class PixelDistanceEval:
                 continue
 
             dists = torch.cdist(pred_coords.float(), label_coords.float())
+            inverted_dists = torch.cdist(label_coords.float(), pred_coords.float())
 
             min_dists, _ = torch.min(dists, dim=1)
+            min_inverted_dists, _ = torch.min(inverted_dists, dim=1)
 
             total_distance = torch.sum(min_dists)
             total_samples = min_dists.size(0)
 
+            total_inverted_distance = torch.sum(min_inverted_dists)
+            total_inverted_samples = min_inverted_dists.size(0)
+
             avg_distance = total_distance / (total_samples + 1e-6)
+            avg_inverted_distance = total_inverted_distance / (total_inverted_samples + 1e-6)
             self.distances.append(avg_distance)
+            self.inverted_distances.append(avg_inverted_distance)

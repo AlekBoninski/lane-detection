@@ -4,8 +4,7 @@ from torch.utils.data import DataLoader
 from src.accuracy_eval import AccuracyEval, PixelDistanceEval
 from src.dataset import TuSimple
 from src.dataset.transform import ERFNetResize, ImageAndMaskToTensor
-from src.models import ERFNet
-from src.models.erfnet import ERFNetLowDilation
+from src.models.erfnet import ERFNetLowDilation, ERFNet
 
 NUM_CLASSES = 2
 
@@ -60,12 +59,12 @@ class ERFNetTester:
 
             if step % 50 == 0:
                 avg_iou, avg_props = accuracy_eval()
-                avg_distance = pixel_accuracy_eval()
-                print(f"Step: {step}, IoU: {avg_iou}, Proportions: {avg_props}, Pixel distance: {avg_distance}")
+                avg_distance, avg_inverted_distance = pixel_accuracy_eval()
+                print(f"Step: {step}, IoU: {avg_iou}, Proportions: {avg_props}, Pixel distance: {avg_distance}, Inverted pixel distance: {avg_inverted_distance}")
 
         avg_iou, avg_props = accuracy_eval()
-        avg_distance = pixel_accuracy_eval()
-        print(f"Testing done. IoU: {avg_iou}. Props: {avg_props}. Pixel distance: {avg_distance}")
+        avg_distance, avg_inverted_distance = pixel_accuracy_eval()
+        print(f"Testing done. IoU: {avg_iou}. Props: {avg_props}. Pixel distance: {avg_distance}. Inverted pixel distance: {avg_inverted_distance}")
 
 
 def test_erfnet_efficiency():
@@ -73,9 +72,11 @@ def test_erfnet_efficiency():
         "E:\\FMI\\Thesis\\archive\\TUSimple",
         "E:\\FMI\\Thesis\\archive\\TUSimple\\test_label_new.json",
         # "../checkpoints_0_100/erfnet/checkpoint-0100.pth.tar",
-        "../checkpoints_low_dilation_0_150/erfnet/best.pth.tar",
-        # ERFNet,
-        ERFNetLowDilation
+        "../checkpoints_80_20/erfnet/checkpoint-0020.pth.tar",
+        # "../checkpoints_low_dilation_0_150/erfnet/checkpoint-0100.pth.tar",
+        # "../checkpoints_low_dilation_80_20/erfnet/checkpoint-0020.pth.tar",
+        ERFNet,
+        # ERFNetLowDilation
     )
 
     tester.test()

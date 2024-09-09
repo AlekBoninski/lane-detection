@@ -26,6 +26,8 @@ def get_model(args, num_classes):
 
     if model_name == "encoder":
         return Encoder(num_classes, predict=True)
+    if model_name == "encoder-low-dilation":
+        return EncoderLowDilation(num_classes, predict=True)
     if model_name == "erfnet":
         pretrained_encoder = args.pretrained_encoder
 
@@ -53,6 +55,13 @@ def get_transformers(args):
     model_name = args.model
 
     if model_name == "encoder":
+        return [
+            EncoderResize(),
+            RandomAugment(),
+            ImageAndMaskToTensor(),
+            MaskRelabel(),
+        ]
+    if model_name == "encoder-low-dilation":
         return [
             EncoderResize(),
             RandomAugment(),
@@ -124,7 +133,7 @@ def main(args):
 if __name__ == "__main__":
     argparser = ArgumentParser()
 
-    argparser.add_argument("--model", type=str, choices=["encoder", "erfnet", "erfnet-low-dilation"])
+    argparser.add_argument("--model", type=str, choices=["encoder", "encoder-low-dilation", "erfnet", "erfnet-low-dilation"])
     argparser.add_argument("--resume-training", action="store_true", default=False)
     argparser.add_argument("--epochs", type=int, default=150)
 
