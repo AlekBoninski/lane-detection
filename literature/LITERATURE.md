@@ -1,1 +1,0 @@
-# Links to literature that will be helpful or used in the process of making the thesis. The folder will contain PDFs of sources not available via links.

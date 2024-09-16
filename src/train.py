@@ -147,7 +147,8 @@ if __name__ == "__main__":
 
     argparser.add_argument("--cuda", action="store_true", default=True)
     argparser.add_argument("--height", type=int, default=512)
-    argparser.add_argument("--dataset-root", type=str, default="E:\\FMI\\Thesis\\archive\\TUSimple")
+    # argparser.add_argument("--dataset-root", type=str, default="E:\\FMI\\Thesis\\archive\\TUSimple")
+    argparser.add_argument("--dataset-root", type=str, default="../archive/TUSimple")
 
     argparser.add_argument("--pretrained-encoder", type=str)
 
